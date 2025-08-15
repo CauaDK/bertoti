@@ -7,3 +7,6 @@ Pode se dizer que engenharia de software ainda não tem regras tao precisas para
 Traz uma melhor definição de engenharia de software, dizendo que pode ser entendida como uma programação integrada a longo prazo, onde o código deve se adaptar ao longo de sua vida útil, a organização também se adaptar conforme o código evolui e suas decisões.
 
 ## TRADE-OFF
+1. Tempo de entrega x Qualidade de código
+2. Escalabilidade x Custo inicial
+3. Padronização x Flexibilidade
