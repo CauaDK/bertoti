@@ -1,5 +1,7 @@
-## BIBLIOTECA-EXEMPLO
+## CHAT-OLLAMA
 
-Um sistema para adicionar livros e fazer uma busca neles.
+Um sistema simples de conversa com uma IA
 
-Foi utilizado um banco de dados sqlite para incrementar os livros.
+Utilizando a biblioteca Ollama para java
+
+Funciona como qualquer outra IA basta fazer uma pergunta para obter respostas
