@@ -15,7 +15,10 @@ Traz uma melhor definição de engenharia de software, dizendo que pode ser ente
 ![Curso UML](imagens/UML-Curso.png)
 
 ## ATIVIDADE 5 E 6
-[curso-exemplo](curso-exemplo)
+[Pasta: curso-exemplo](curso-exemplo)
 
 ## ATIVIDADE 7
-[curso-exemplo](biblioteca-exemplo)
+[Pasta: biblioteca-exemplo](biblioteca-exemplo)
+
+## ATIVIDADE 8
+[Pasta: chat-ollama](chat-ollama)
