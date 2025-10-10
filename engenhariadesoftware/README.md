@@ -15,7 +15,7 @@ Traz uma melhor definição de engenharia de software, dizendo que pode ser ente
 ![Curso UML](imagens/UML-Curso.png)
 
 ## ATIVIDADE 5 E 6
-O arquivo curso-exemplo
+[curso-exemplo](curso-exemplo)
 
 ## ATIVIDADE 7
-O arquivo biblioteca-exemplo
+[curso-exemplo](biblioteca-exemplo)
