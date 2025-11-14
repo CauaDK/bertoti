@@ -1,66 +1,87 @@
-# trabalho-backend
+# 🚀 trabalho-backend
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+[](https://quarkus.io/)
+[](http://www.apache.org/licenses/LICENSE-2.0)
+Um serviço de backend desenvolvido com **Quarkus**, o Framework Java Supersônico e Subatômico. Este projeto demonstra uma API REST conectada a um banco de dados PostgreSQL.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+-----
 
-## Running the application in dev mode
+## 🛠️ Tecnologias Utilizadas
 
-You can run your application in dev mode that enables live coding using:
+  * **Java 17+**
+  * **Quarkus:** Framework principal
+  * **Maven:** Gerenciador de dependências e build
+  * **RESTEasy (JAX-RS):** Para a criação dos endpoints da API
+  * **JDBC Driver:** Para conexão com o **PostgreSQL**
 
-```shell script
+-----
+
+## ⚙️ Começando (Modo de Desenvolvimento)
+
+Para rodar a aplicação em modo de desenvolvimento (com *live reload*):
+
+```bash
 ./mvnw quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+Após iniciar, a aplicação estará disponível em `http://localhost:8080`.
 
-## Packaging and running the application
+> **💡 Interface de Dev:** O Quarkus oferece uma interface de desenvolvimento muito útil. Acesse **[http://localhost:8080/q/dev/](https://www.google.com/search?q=http://localhost:8080/q/dev/)** para explorar seus endpoints, testar rotas e ver a configuração.
 
-The application can be packaged using:
+-----
 
-```shell script
+## 📦 Gerando o Pacote da Aplicação (Build)
+
+Você pode gerar o pacote da aplicação de duas formas principais.
+
+### 1\. Pacote Padrão (Recomendado)
+
+Este comando cria o `.jar` e coloca as dependências na pasta `lib/`.
+
+```bash
 ./mvnw package
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+**Para executar:**
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+```bash
+java -jar target/quarkus-app/quarkus-run.jar
+```
 
-If you want to build an _über-jar_, execute the following command:
+### 2\. Pacote Único (Über-Jar)
 
-```shell script
+Para gerar um **único arquivo `.jar`** que já inclui todas as dependências:
+
+```bash
 ./mvnw package -Dquarkus.package.jar.type=uber-jar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+**Para executar:**
 
-## Creating a native executable
+```bash
+java -jar target/*-runner.jar
+```
 
-You can create a native executable using:
+-----
 
-```shell script
+## ⚡ Compilação Nativa (Opcional)
+
+Uma das maiores vantagens do Quarkus é compilar para um executável nativo (usando GraalVM), o que resulta em um tempo de inicialização quase instantâneo.
+
+**Se você tem o GraalVM instalado:**
+
+```bash
 ./mvnw package -Dnative
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+**Se você NÃO tem o GraalVM (usará o Docker):**
 
-```shell script
+```bash
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/trabalho-backend-1.0.0-SNAPSHOT-runner`
+**Para executar o arquivo nativo gerado:**
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
-
-## Provided Code
-
-### RESTEasy JAX-RS
-
-Easily start your RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+```bash
+./target/trabalho-backend-1.0.0-SNAPSHOT-runner
+```
