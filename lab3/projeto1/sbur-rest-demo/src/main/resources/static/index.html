@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Petshop API Frontend</title>
+</head>
+<body>
+
+<h1>Gerenciamento de Petshops</h1>
+
+<!-- LISTAR TODOS -->
+<h2>Listar Todos</h2>
+<button onclick="getPetshops()">Buscar Petshops</button>
+<ul id="lista"></ul>
+
+<hr>
+
+<!-- BUSCAR POR ID -->
+<h2>Buscar por ID</h2>
+<input type="number" id="buscarId" placeholder="ID">
+<button onclick="getPetshopById()">Buscar</button>
+<pre id="resultadoBusca"></pre>
+
+<hr>
+
+<!-- CRIAR -->
+<h2>Criar Petshop</h2>
+<input type="text" id="novoNome" placeholder="Nome do petshop">
+<button onclick="criarPetshop()">Criar</button>
+
+<hr>
+
+<!-- ATUALIZAR -->
+<h2>Atualizar Petshop</h2>
+<input type="number" id="updateId" placeholder="ID">
+<input type="text" id="updateNome" placeholder="Novo nome">
+<button onclick="atualizarPetshop()">Atualizar</button>
+
+<hr>
+
+<!-- DELETAR -->
+<h2>Deletar Petshop</h2>
+<input type="number" id="deleteId" placeholder="ID">
+<button onclick="deletarPetshop()">Deletar</button>
+
+<script>
+
+    const API_URL = "http://localhost:8080/petshops";
+
+
+    // ✅ GET ALL
+    async function getPetshops() {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+
+        const lista = document.getElementById("lista");
+        lista.innerHTML = "";
+
+        data.forEach(petshop => {
+            const li = document.createElement("li");
+            li.textContent = `ID: ${petshop.id} - Nome: ${petshop.name}`;
+            lista.appendChild(li);
+        });
+    }
+
+
+    // ✅ GET BY ID
+    async function getPetshopById() {
+        const id = document.getElementById("buscarId").value;
+        const response = await fetch(`${API_URL}/${id}`);
+
+        if (response.status === 200) {
+            const data = await response.json();
+            document.getElementById("resultadoBusca").textContent =
+                JSON.stringify(data, null, 2);
+        } else {
+            document.getElementById("resultadoBusca").textContent =
+                "Petshop não encontrado.";
+        }
+    }
+
+
+    // ✅ POST
+    async function criarPetshop() {
+        const nome = document.getElementById("novoNome").value;
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name: nome })
+        });
+
+        const data = await response.json();
+        alert("Criado com ID: " + data.id);
+    }
+
+
+    // ✅ PUT
+    async function atualizarPetshop() {
+        const id = document.getElementById("updateId").value;
+        const nome = document.getElementById("updateNome").value;
+
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name: nome })
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            const data = await response.json();
+            alert("Atualizado: " + JSON.stringify(data));
+        } else {
+            alert("Erro ao atualizar.");
+        }
+    }
+
+
+    // ✅ DELETE
+    async function deletarPetshop() {
+        const id = document.getElementById("deleteId").value;
+
+        await fetch(`${API_URL}/${id}`, {
+            method: "DELETE"
+        });
+
+        alert("Petshop deletado (se existia).");
+    }
+
+</script>
+
+</body>
+</html>

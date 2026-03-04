@@ -16,138 +16,133 @@ import java.util.Optional;
 @SpringBootApplication
 public class SburRestDemoApplication {
 
-	public static void main(String[] args) {
-		Database.initialize();
-		SpringApplication.run(SburRestDemoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        Database.initialize();
+        SpringApplication.run(SburRestDemoApplication.class, args);
+    }
 
 }
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/coffees")
+@RequestMapping("/petshops")
 class RestApiDemoController {
 
-	public RestApiDemoController() {
-	}
+    public RestApiDemoController() {
+    }
 
-	@GetMapping
-	Iterable<Coffee> getCoffees() {
-		List<Coffee> coffees = new ArrayList<>();
-		try (Connection conn = Database.get();
-				Statement st = conn.createStatement();
-				ResultSet rs = st.executeQuery("SELECT id, nome FROM cafe")) {
-			while (rs.next()) {
-				coffees.add(new Coffee(rs.getLong("id"), rs.getString("nome")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return coffees;
-	}
+    @GetMapping
+    Iterable<Petshop> getPetshops() {
+        List<Petshop> petshops = new ArrayList<>();
+        try (Connection conn = Database.get();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery("SELECT id, nome FROM petshop")) {
+            while (rs.next()) {
+                petshops.add(new Petshop(rs.getLong("id"), rs.getString("nome")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return petshops;
+    }
 
-	@GetMapping("/{id}")
-	Optional<Coffee> getCoffeeById(@PathVariable Long id) {
-		try (Connection conn = Database.get();
-				PreparedStatement ps = conn.prepareStatement("SELECT id, nome FROM cafe WHERE id = ?")) {
-			ps.setLong(1, id);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					return Optional.of(new Coffee(rs.getLong("id"), rs.getString("nome")));
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return Optional.empty();
-	}
+    @GetMapping("/{id}")
+    Optional<Petshop> getPetshopById(@PathVariable Long id) {
+        try (Connection conn = Database.get();
+             PreparedStatement ps = conn.prepareStatement("SELECT id, nome FROM petshop WHERE id = ?")) {
+            ps.setLong(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(new Petshop(rs.getLong("id"), rs.getString("nome")));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
 
-	@PostMapping
-	Coffee postCoffee(@RequestBody Coffee coffee) {
-		try (Connection conn = Database.get();
-				PreparedStatement ps = conn.prepareStatement("INSERT INTO cafe (nome) VALUES (?)",
-						Statement.RETURN_GENERATED_KEYS)) {
-			ps.setString(1, coffee.getName());
-			ps.executeUpdate();
-			try (ResultSet rs = ps.getGeneratedKeys()) {
-				if (rs.next()) {
-					coffee.setId(rs.getLong(1));
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return coffee;
-	}
+    @PostMapping
+    Petshop postPetshop(@RequestBody Petshop petshop) {
+        try (Connection conn = Database.get();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO petshop (nome) VALUES (?)",
+                     Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, petshop.getName());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    petshop.setId(rs.getLong(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return petshop;
+    }
 
-	@PutMapping("/{id}")
-	ResponseEntity<Coffee> putCoffee(@PathVariable Long id,
-			@RequestBody Coffee coffee) {
-		boolean exists = false;
-		try (Connection conn = Database.get();
-				PreparedStatement ps = conn.prepareStatement("UPDATE cafe SET nome = ? WHERE id = ?")) {
-			ps.setString(1, coffee.getName());
-			ps.setLong(2, id);
-			int rows = ps.executeUpdate();
-			if (rows > 0) {
-				exists = true;
-				coffee.setId(id);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+    @PutMapping("/{id}")
+    ResponseEntity<Petshop> putPetshop(@PathVariable Long id,
+                                       @RequestBody Petshop petshop) {
+        boolean exists = false;
+        try (Connection conn = Database.get();
+             PreparedStatement ps = conn.prepareStatement("UPDATE petshop SET nome = ? WHERE id = ?")) {
+            ps.setString(1, petshop.getName());
+            ps.setLong(2, id);
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                exists = true;
+                petshop.setId(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-		if (exists) {
-			return new ResponseEntity<>(coffee, HttpStatus.OK);
-		} else {
-			// If not exists, create it (original logic implies upsert behavior, but here
-			// auto-increment makes it tricky to force ID)
-			// For simplicity/standard REST, if PUT on non-existing ID, we can create.
-			// But with auto-increment ID, we generally ignore the ID in path for creation
-			// or error out.
-			// Original code: if not exists, postCoffee (add new).
-			return new ResponseEntity<>(postCoffee(coffee), HttpStatus.CREATED);
-		}
-	}
+        if (exists) {
+            return new ResponseEntity<>(petshop, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(postPetshop(petshop), HttpStatus.CREATED);
+        }
+    }
 
-	@DeleteMapping("/{id}")
-	void deleteCoffee(@PathVariable Long id) {
-		try (Connection conn = Database.get();
-				PreparedStatement ps = conn.prepareStatement("DELETE FROM cafe WHERE id = ?")) {
-			ps.setLong(1, id);
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+    @DeleteMapping("/{id}")
+    void deletePetshop(@PathVariable Long id) {
+        try (Connection conn = Database.get();
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM petshop WHERE id = ?")) {
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
-class Coffee {
-	private Long id;
-	private String name;
+class Petshop {
+    private Long id;
+    private String name;
 
-	@JsonCreator
-	public Coffee(@JsonProperty("id") Long id, @JsonProperty("name") String name) {
-		this.id = id;
-		this.name = name;
-	}
+    @JsonCreator
+    public Petshop(@JsonProperty("id") Long id, @JsonProperty("name") String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-	public Coffee(String name) {
-		this(null, name);
-	}
+    public Petshop(String name) {
+        this(null, name);
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 }
