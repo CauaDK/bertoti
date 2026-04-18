@@ -7,16 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Database {
-    // URL para executar bootstrap (sem schema)
+
     private static final String ROOT_URL = "jdbc:mysql://localhost:3306/?serverTimezone=America/Sao_Paulo&allowPublicKeyRetrieval=true&useSSL=false";
-    // URL da aplicação (com schema LAB3PROJ1)
+
     private static final String DB_URL = "jdbc:mysql://localhost:3306/LAB3PROJ1?serverTimezone=America/Sao_Paulo&allowPublicKeyRetrieval=true&useSSL=false";
 
-    // credenciais root (apenas p/ bootstrap). Se não tiver, deixe em branco.
     private static final String ROOT_USER = "root";
     private static final String ROOT_PASS = "123456";
 
-    // usuário da aplicação
+
     private static final String APP_USER = "root";
     private static final String APP_PASS = "123456";
 
@@ -28,17 +27,13 @@ public final class Database {
     }
 
     public static void initialize() {
-        // 1) Tentar rodar bootstrap com root (criar DB/usuário/grants). Se falhar por
-        // permissão, seguimos.
+
         runSqlFromResource(ROOT_URL, ROOT_USER, ROOT_PASS, "/db/schema-bootstrap.sql", true);
 
-        // 2) Rodar schema da app (tabelas + seeds) com usuário da app ou com root se
-        // preferir
-        // Se a app ainda não existir, a primeira conexão com tguser pode falhar; então
-        // tentamos root como fallback.
+
         boolean ok = runSqlFromResource(DB_URL, APP_USER, APP_PASS, "/db/schema-app.sql", false);
         if (!ok) {
-            System.err.println("⚠️ Tentando rodar schema-app.sql com root como fallback...");
+            System.err.println("Tentando rodar schema-app.sql com root como fallback...");
             runSqlFromResource(DB_URL, ROOT_USER, ROOT_PASS, "/db/schema-app.sql", false);
         }
     }
@@ -47,7 +42,7 @@ public final class Database {
             boolean ignoreErrors) {
         InputStream in = Database.class.getResourceAsStream(resource);
         if (in == null) {
-            System.err.println("❌ Arquivo não encontrado: " + resource);
+            System.err.println("Arquivo não encontrado: " + resource);
             return false;
         }
         try (Connection conn = DriverManager.getConnection(url, user, pass)) {
@@ -62,13 +57,13 @@ public final class Database {
                     }
                 }
             }
-            System.out.println("✅ Executado com sucesso: " + resource + " (user=" + user + ")");
+            System.out.println("Executado com sucesso: " + resource + " (user=" + user + ")");
             return true;
         } catch (Exception e) {
-            System.err.println("⚠️ Falha ao executar " + resource + " com " + user + ": " + e.getMessage());
+            System.err.println("Falha ao executar " + resource + " com " + user + ": " + e.getMessage());
             if (!ignoreErrors)
                 return false;
-            return true; // ignora erros no bootstrap quando sem permissão
+            return true;
         }
     }
 
@@ -82,10 +77,7 @@ public final class Database {
         }
     }
 
-    // Divisor simples por ';' no final de linha. Evitamos problemas removendo
-    // comentários e linhas vazias.
-    // Como a trigger usa 1 instrução sem BEGIN/END, não precisamos lidar com
-    // DELIMITER.
+
     private static List<String> splitStatements(String sql) {
         List<String> list = new ArrayList<>();
         StringBuilder cur = new StringBuilder();
